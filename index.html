@@ -3,111 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Báo Tường Chúc Tết</title>
+    <title>Game Tài Xỉu</title>
     <style>
         body {
-            font-family: "Times New Roman", serif;
-            background-color: #f8f8f2;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #fcd5ce;
+            font-family: Arial, sans-serif;
             text-align: center;
-            padding: 20px;
-            color: #b52a36;
-            border-bottom: 5px solid #ff8882;
-        }
-        header h1 {
-            color: red;
-            font-size: 3em;
-            margin: 0;
-            font-weight: bold;
-        }
-        header h2 {
-            font-size: 1.5em;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        main {
+            background-image: url('dog.jfif');
+            background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
+            color: white;
             padding: 20px;
         }
-        section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        .container {
+            margin-top: 200px; /* Đẩy nội dung xuống */
         }
-        section h2 {
-            color: #b52a36;
-            border-bottom: 2px solid #ff8882;
-            padding-bottom: 5px;
-            font-size: 1.8em;
+        .dice {
+            font-size: 50px;
+            margin: 10px;
         }
-        section p, section ul {
-            font-size: 1.2em;
-            color: #333;
-            margin: 10px 0;
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
         }
-        img {
-            display: block;
-            margin: 20px auto;
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #fcd5ce;
-            color: #b52a36;
-            font-size: 1.2em;
-            border-top: 5px solid #ff8882;
+        .tai { background-color: #e74c3c; color: white; }
+        .xiu { background-color: #3498db; color: white; }
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>BÁO TƯỜNG CHÚC TẾT</h1>
-        <h2>Xuân Mới - Niềm Vui Mới</h2>
-    </header>
-    <main>
-        <section>
-            <h2 style="color: red;">LỜI CHÚC ĐẦU NĂM</h2>
-            <p>Xuân Quý Tỵ 2025 đã về, mang theo những làn gió mới, những hy vọng tươi sáng và niềm vui lan tỏa khắp mọi nhà. Trong thời khắc chuyển giao năm mới, chúng ta cùng gửi đến nhau những lời chúc tốt đẹp nhất. Chúc mọi người một năm mới:</p>
-            <ul>
-                <li>Sức khỏe dồi dào</li>
-                <li>Hạnh phúc viên mãn</li>
-                <li>Công việc thuận lợi</li>
-                <li>Bình an và may mắn</li>
-            </ul>
-        </section>
-        <section>
-            <h2 style="color: red;">THƠ CHÚC TẾT</h2>
-            <ul>
-                <li>Cung chúc đoàn viên</li>
-                <li>Vạn sự bình yên</li>
-                <li>Hạnh phúc vô biên</li>
-                <li>Vui vẻ triền miên</li>
-                <li>Kiếm được nhiều tiền</li>
-                <li>Sung sướng như tiên</li>
-            </ul>
-        </section>
-        <section>
-            <h2 style="color: red;">HÌNH ẢNH CHÀO XUÂN</h2>
-            <img src="https://static.vinwonders.com/production/Tet-Holiday-banner.jpg" alt="Chúc Tết 2025" width="500" height="300">
-        </section>
-        <section>
-            <h2 style="color: red;">ÂM THANH CHÚC TẾT</h2>
-            <audio autoplay controls>
-                <source src="TetDongDay-KHOANguyenKhoa-5850771.mp3" type="audio/mpeg">
-                Trình duyệt của bạn không hỗ trợ phát âm thanh.
-            </audio>
-        </section>
-    </main>
-    <footer>
-        <p>Chúc mừng năm mới 2025 - Xuân Quý Tỵ</p>
-    </footer>
+    <div class="container">
+        <h1>Chào mừng đến với game Tài Xỉu</h1>
+        <div id="dice" class="dice">🎲 🎲 🎲</div>
+        <button class="button tai" onclick="playGame('tai')">Tài (11-17)</button>
+        <button class="button xiu" onclick="playGame('xiu')">Xỉu (4-10)</button>
+        <div id="result" class="result"></div>
+    </div>
+    
+    <script>
+        function rollDice() {
+            return Math.floor(Math.random() * 6) + 1;
+        }
+
+        function playGame(choice) {
+            let dice1 = rollDice();
+            let dice2 = rollDice();
+            let dice3 = rollDice();
+            let total = dice1 + dice2 + dice3;
+            document.getElementById("dice").innerHTML = `🎲 ${dice1} 🎲 ${dice2} 🎲 ${dice3}`;
+            let resultText = `Tổng: ${total} - `;
+            if ((total >= 4 && total <= 10 && choice === 'xiu') || (total >= 11 && total <= 17 && choice === 'tai')) {
+                resultText += "Bạn thắng! 🎉";
+            } else {
+                resultText += "Bạn thua! 😢";
+            }
+            document.getElementById("result").innerText = resultText;
+        }
+    </script>
 </body>
 </html>
