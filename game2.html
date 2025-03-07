@@ -16,40 +16,23 @@
             padding: 20px;
             position: relative;
         }
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
+        .bet-options, .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
         }
-        .container {
-            position: relative;
-            z-index: 1;
-            margin-top: 50px;
-        }
-        .bet-options {
-            margin: 20px 0;
-        }
-        .bet-button {
-            padding: 10px;
-            margin: 5px;
+        .bet-button, .play-button {
+            padding: 10px 15px;
             font-size: 18px;
             background-color: #f1c40f;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        .all-in {
+        .play-button {
             background-color: #27ae60;
             color: white;
-        }
-        .choices {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
         }
         .choice {
             width: 100px;
@@ -62,6 +45,17 @@
             font-size: 40px;
             cursor: pointer;
             background-color: rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        .bet-amount {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: yellow;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 14px;
         }
         .result {
             margin-top: 20px;
@@ -70,92 +64,95 @@
     </style>
 </head>
 <body>
-    <div class="overlay"></div>
-    <div class="container">
-        <h1>Game Bầu Cua 🦌🎲</h1>
-        <p id="balance">Số dư: 1000 xu</p>
+    <h1>Game Bầu Cua 🦌🎲</h1>
+    <p id="balance">Số dư: 1000 xu</p>
 
-        <p>Chọn số tiền cược:</p>
-        <div class="bet-options">
-            <button class="bet-button" onclick="setBet(100)">100</button>
-            <button class="bet-button" onclick="setBet(200)">200</button>
-            <button class="bet-button" onclick="setBet(300)">300</button>
-            <button class="bet-button all-in" onclick="setBet(balance)">All In</button>
-        </div>
-        <p id="current-bet">Tiền cược: 100 xu</p>
-
-        <p>Chọn con vật:</p>
-        <div class="choices">
-            <div class="choice" onclick="playGame('nai')">🦌</div>
-            <div class="choice" onclick="playGame('bau')">🍐</div>
-            <div class="choice" onclick="playGame('ga')">🐓</div>
-            <div class="choice" onclick="playGame('ca')">🐟</div>
-            <div class="choice" onclick="playGame('cua')">🦀</div>
-            <div class="choice" onclick="playGame('tom')">🦐</div>
-        </div>
-
-        <div id="result" class="result"></div>
+    <p>Chọn số tiền cược:</p>
+    <div class="bet-options">
+        <button class="bet-button" onclick="setBet(100)">100</button>
+        <button class="bet-button" onclick="setBet(200)">200</button>
+        <button class="bet-button" onclick="setBet(300)">300</button>
+        <button class="bet-button" onclick="setBet(balance)">All In</button>
     </div>
+
+    <p>Chọn con vật để cược:</p>
+    <div class="choices">
+        <div class="choice" onclick="toggleBet('nai')" id="nai">🦌<span class="bet-amount" id="bet-nai"></span></div>
+        <div class="choice" onclick="toggleBet('bau')" id="bau">🍐<span class="bet-amount" id="bet-bau"></span></div>
+        <div class="choice" onclick="toggleBet('ga')" id="ga">🐓<span class="bet-amount" id="bet-ga"></span></div>
+        <div class="choice" onclick="toggleBet('ca')" id="ca">🐟<span class="bet-amount" id="bet-ca"></span></div>
+        <div class="choice" onclick="toggleBet('cua')" id="cua">🦀<span class="bet-amount" id="bet-cua"></span></div>
+        <div class="choice" onclick="toggleBet('tom')" id="tom">🦐<span class="bet-amount" id="bet-tom"></span></div>
+    </div>
+
+    <button class="play-button" onclick="playGame()">Lắc Xúc Xắc 🎲</button>
+
+    <div id="result" class="result"></div>
 
     <script>
         let balance = 1000;
         let bet = 100;
+        let bets = {};
         let animals = ["nai", "bau", "ga", "ca", "cua", "tom"];
-        let icons = {
-            "nai": "🦌",
-            "bau": "🍐",
-            "ga": "🐓",
-            "ca": "🐟",
-            "cua": "🦀",
-            "tom": "🦐"
-        };
+        let icons = { "nai": "🦌", "bau": "🍐", "ga": "🐓", "ca": "🐟", "cua": "🦀", "tom": "🦐" };
 
         function setBet(amount) {
             if (amount > balance) {
                 alert("Bạn không đủ tiền để cược số này!");
             } else {
                 bet = amount;
-                document.getElementById("current-bet").innerText = `Tiền cược: ${bet} xu`;
             }
+        }
+
+        function toggleBet(animal) {
+            if (!bets[animal]) bets[animal] = 0;
+            if (bets[animal] + bet > balance) {
+                alert("Bạn không đủ tiền!");
+                return;
+            }
+            bets[animal] += bet;
+            balance -= bet;
+            updateUI();
         }
 
         function rollDice() {
-            return animals[Math.floor(Math.random() * animals.length)];
+            return [
+                animals[Math.floor(Math.random() * animals.length)],
+                animals[Math.floor(Math.random() * animals.length)],
+                animals[Math.floor(Math.random() * animals.length)]
+            ];
         }
 
-        function playGame(guess) {
-            if (bet > balance) {
-                alert("Bạn không đủ tiền để cược!");
+        function playGame() {
+            if (Object.keys(bets).length === 0) {
+                alert("Hãy chọn ít nhất một con để cược!");
                 return;
             }
 
-            let dice1 = rollDice();
-            let dice2 = rollDice();
-            let dice3 = rollDice();
-            let result = [dice1, dice2, dice3];
+            let results = rollDice();
+            let winnings = 0;
+            let resultText = `🎲 Kết quả: ${icons[results[0]]} - ${icons[results[1]]} - ${icons[results[2]]} \n`;
 
-            // Đếm số lần đoán đúng
-            let correctGuesses = result.filter(dice => dice === guess).length;
-
-            let resultText = `🎲 Kết quả: ${icons[dice1]} - ${icons[dice2]} - ${icons[dice3]} `;
-
-            if (correctGuesses === 1) {
-                balance += bet; // Thắng bình thường
-                resultText += "✅ Bạn thắng!";
-            } else if (correctGuesses === 2) {
-                balance += bet * 2; // Nhân đôi nếu đoán trúng 2 con
-                resultText += "🎉 Bạn thắng x2!";
-            } else if (correctGuesses === 3) {
-                balance += bet * 3; // Nhân ba nếu đoán trúng cả 3 con
-                resultText += "🏆 Bạn thắng x3!";
-            } else {
-                balance -= bet; // Thua mất tiền cược
-                resultText += "❌ Bạn thua!";
+            for (let animal in bets) {
+                let count = results.filter(dice => dice === animal).length;
+                if (count === 1) winnings += bets[animal] * 1.5;
+                else if (count === 2) winnings += bets[animal] * 2;
+                else if (count === 3) winnings += bets[animal] * 3;
             }
 
-            // Cập nhật giao diện
+            balance += Math.floor(winnings);
+            bets = {}; 
+            updateUI();
+            resultText += winnings > 0 ? `✅ Bạn thắng ${Math.floor(winnings)} xu!` : `❌ Bạn thua!`;
             document.getElementById("result").innerText = resultText;
+        }
+
+        function updateUI() {
             document.getElementById("balance").innerText = `Số dư: ${balance} xu`;
+            animals.forEach(animal => {
+                let betDisplay = document.getElementById(`bet-${animal}`);
+                betDisplay.innerText = bets[animal] ? bets[animal] : "";
+            });
         }
     </script>
 </body>
