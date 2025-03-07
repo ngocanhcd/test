@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Bầu Cua</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('cuaa.jfif'); /* Hình nền bầu cua */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            margin-top: 50px;
+        }
+        .bet-options {
+            margin: 20px 0;
+        }
+        .bet-button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 18px;
+            background-color: #f1c40f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .all-in {
+            background-color: #27ae60;
+            color: white;
+        }
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .choice {
+            width: 100px;
+            height: 100px;
+            border: 2px solid white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <h1>Game Bầu Cua 🦌🎲</h1>
+        <p id="balance">Số dư: 1000 xu</p>
+
+        <p>Chọn số tiền cược:</p>
+        <div class="bet-options">
+            <button class="bet-button" onclick="setBet(100)">100</button>
+            <button class="bet-button" onclick="setBet(200)">200</button>
+            <button class="bet-button" onclick="setBet(300)">300</button>
+            <button class="bet-button all-in" onclick="setBet(balance)">All In</button>
+        </div>
+        <p id="current-bet">Tiền cược: 100 xu</p>
+
+        <p>Chọn con vật:</p>
+        <div class="choices">
+            <div class="choice" onclick="playGame('nai')">🦌</div>
+            <div class="choice" onclick="playGame('bau')">🍐</div>
+            <div class="choice" onclick="playGame('ga')">🐓</div>
+            <div class="choice" onclick="playGame('ca')">🐟</div>
+            <div class="choice" onclick="playGame('cua')">🦀</div>
+            <div class="choice" onclick="playGame('tom')">🦐</div>
+        </div>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        let balance = 1000;
+        let bet = 100;
+        let animals = ["nai", "bau", "ga", "ca", "cua", "tom"];
+        let icons = {
+            "nai": "🦌",
+            "bau": "🍐",
+            "ga": "🐓",
+            "ca": "🐟",
+            "cua": "🦀",
+            "tom": "🦐"
+        };
+
+        function setBet(amount) {
+            if (amount > balance) {
+                alert("Bạn không đủ tiền để cược số này!");
+            } else {
+                bet = amount;
+                document.getElementById("current-bet").innerText = `Tiền cược: ${bet} xu`;
+            }
+        }
+
+        function rollDice() {
+            return animals[Math.floor(Math.random() * animals.length)];
+        }
+
+        function playGame(guess) {
+            if (bet > balance) {
+                alert("Bạn không đủ tiền để cược!");
+                return;
+            }
+
+            let dice1 = rollDice();
+            let dice2 = rollDice();
+            let dice3 = rollDice();
+            let result = [dice1, dice2, dice3];
+
+            // Đếm số lần đoán đúng
+            let correctGuesses = result.filter(dice => dice === guess).length;
+
+            let resultText = `🎲 Kết quả: ${icons[dice1]} - ${icons[dice2]} - ${icons[dice3]} `;
+
+            if (correctGuesses === 1) {
+                balance += bet; // Thắng bình thường
+                resultText += "✅ Bạn thắng!";
+            } else if (correctGuesses === 2) {
+                balance += bet * 2; // Nhân đôi nếu đoán trúng 2 con
+                resultText += "🎉 Bạn thắng x2!";
+            } else if (correctGuesses === 3) {
+                balance += bet * 3; // Nhân ba nếu đoán trúng cả 3 con
+                resultText += "🏆 Bạn thắng x3!";
+            } else {
+                balance -= bet; // Thua mất tiền cược
+                resultText += "❌ Bạn thua!";
+            }
+
+            // Cập nhật giao diện
+            document.getElementById("result").innerText = resultText;
+            document.getElementById("balance").innerText = `Số dư: ${balance} xu`;
+        }
+    </script>
+</body>
+</html>
