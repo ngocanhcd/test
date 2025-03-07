@@ -45,6 +45,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .all-in { background-color: #27ae60; color: white; }
     </style>
 </head>
 <body>
@@ -57,11 +58,13 @@
         <button class="bet-button" onclick="setBet(200)">200</button>
         <button class="bet-button" onclick="setBet(300)">300</button>
         <button class="bet-button" onclick="setBet(500)">500</button>
+        <button class="bet-button all-in" onclick="setBet(balance)">All In</button>
         <p id="current-bet">Tiền cược: 100 xu</p>
         <button class="button tai" onclick="playGame('tai')">Tài (11-17)</button>
         <button class="button xiu" onclick="playGame('xiu')">Xỉu (4-10)</button>
         <div id="result" class="result"></div>
     </div>
+    <audio id="lose-audio" src="catsound.mp3"></audio>
     
     <script>
         let balance = 1000;
@@ -72,11 +75,11 @@
         }
 
         function setBet(amount) {
-            if (amount <= balance) {
+            if (amount > balance) {
+                alert("Bạn không đủ tiền để cược số này!");
+            } else {
                 bet = amount;
                 document.getElementById("current-bet").innerText = `Tiền cược: ${bet} xu`;
-            } else {
-                alert("Bạn không đủ tiền để cược số này!");
             }
         }
 
@@ -93,7 +96,10 @@
             document.getElementById("dice").innerHTML = `🎲 ${dice1} 🎲 ${dice2} 🎲 ${dice3}`;
             let resultText = `Tổng: ${total} - `;
 
-            if ((total >= 4 && total <= 10 && choice === 'xiu') || (total >= 11 && total <= 17 && choice === 'tai')) {
+            if (dice1 === dice2 && dice2 === dice3) {
+                balance += bet * 3;
+                resultText += "Ba số giống nhau! Bạn thắng x3! 🎉";
+            } else if ((total >= 4 && total <= 10 && choice === 'xiu') || (total >= 11 && total <= 17 && choice === 'tai')) {
                 balance += bet;
                 resultText += "Bạn thắng! 🎉";
             } else {
@@ -105,7 +111,8 @@
             document.getElementById("balance").innerText = `Số dư: ${balance} xu`;
             
             if (balance <= 0) {
-                alert("Bạn đã hết tiền! Game over!");
+                document.getElementById("lose-audio").play();
+                alert("Mày đã hết tiền, nếu mày là con nghiện liên hệ ANH NGUYỄN HOÀNG GIA NAM");
             }
         }
     </script>
