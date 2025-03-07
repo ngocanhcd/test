@@ -14,6 +14,7 @@
             background-repeat: no-repeat;
             color: white;
             padding: 20px;
+            position: relative;
         }
         .container {
             margin-top: 200px;
@@ -46,6 +47,23 @@
             cursor: pointer;
         }
         .all-in { background-color: #27ae60; color: white; }
+        .side-image-container {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            text-align: center;
+        }
+        .side-image {
+            width: 150px;
+            height: auto;
+        }
+        .image-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: red;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +81,10 @@
         <button class="button tai" onclick="playGame('tai')">Tài (11-17)</button>
         <button class="button xiu" onclick="playGame('xiu')">Xỉu (4-10)</button>
         <div id="result" class="result"></div>
+        <div class="side-image-container">
+            <img src="nghien.jpg" alt="Hình ảnh minh họa" class="side-image">
+            <p class="image-text">Tác hại của việc thắng quá nhiều</p>
+        </div>
     </div>
     <audio id="lose-audio" src="catsound.mp3"></audio>
     
